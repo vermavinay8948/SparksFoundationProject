@@ -1,0 +1,82 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<div id="donate" class="donate">
+    <%- include("partials/header") -%>
+
+        <div class="container">
+            <div class=" donate-container">
+
+                <h2 class="contact-subtitle donate-title">Giving is the greatest act of <span>Grace.</span></h2>
+                <h2 class="contact-subtitle donate-title">Ready for a <span>Better</span> change?</h2>
+
+                <!-- <input type="number" class="name" id="donate-amount"> -->
+                <br>
+
+<br>
+<div class="sign-up-form">
+
+			<img src="images/download.png" class="spark_image">
+			<h1> </h1>
+
+			<form>
+
+
+			   <script src="https://checkout.razorpay.com/v1/payment-button.js" class="rzr" data-payment_button_id="pl_IZq0dvcewRpnJe" async> </script>   </form>
+	</div>
+
+
+                  // <!-- <button id="buy-now-btn" class="home-link2">DONATE NOW</button> -->
+
+
+            </div>
+        </div>
+</div>
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    // Get the button
+    const buyButton = document.getElementById('buy-now-btn');
+    const donateAmount = document.getElementById('donate-amount');
+
+    // Add click event listner
+    Button.addEventListener('click', async (event) => {
+
+        const response = await fetch('/donate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount: donateAmount.value }) // Rs.500
+        });
+
+        const responseJson = await response.json();
+        const { order } = responseJson;
+
+        const razorPayOptions = {
+            key: 'rzp_test_ovvg5DZ8SkboTn',
+            amount: donateAmount.value,
+            currency: 'INR',
+            name: `Donate`,
+            description: `Paying for testing`,
+            order_id: order.id,
+            handler: function (response) { // handler function when payment is successfull
+                const razorpayPaymentId = response['razorpay_payment_id'];
+                const razorpayOrderId = response['razorpay_order_id'];
+                const razorpaySignature = response['razorpay_signature'];
+
+                window.alert('Payment successfull');
+            },
+            theme: {
+                "color": "#FC9918"
+            }
+        };
+
+        const razorpayInstance = new Razorpay(razorPayOptions);
+        razorpayInstance.open();
+
+    });
+</script>
+
+<%- include("partials/footer"); -%>
